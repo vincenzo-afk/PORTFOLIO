@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Aarav Mehta — Life, Projects &amp; Vision</title>
+<meta name="description" content="An interactive book-style portfolio — the life, work, and vision of Aarav Mehta.">
+
+<!-- Fonts: a characterful display serif for headings, a warm text serif for reading, a quiet sans for UI chrome -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-library" data-reduced-motion="auto">
+
+<!-- ============ AMBIENT DESK BACKDROP ============ -->
+<div class="desk" aria-hidden="true">
+  <div class="desk-vignette"></div>
+  <div class="dust-layer"></div>
+</div>
+
+<!-- ============ SKIP LINK ============ -->
+<a class="skip-link" href="#book-root">Skip to book content</a>
+
+<!-- ============ TOP CHROME ============ -->
+<header class="chrome chrome-top" role="toolbar" aria-label="Reading controls">
+  <div class="chrome-left">
+    <button id="btn-toc" class="chrome-btn" aria-haspopup="true" aria-expanded="false" aria-controls="toc-panel" title="Table of Contents (T)">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M4 5h16v2H4V5zm0 6h16v2H4v-2zm0 6h10v2H4v-2z"/></svg>
+      <span>Contents</span>
+    </button>
+    <button id="btn-search" class="chrome-btn icon-only" aria-haspopup="true" aria-expanded="false" aria-controls="search-panel" title="Search inside the book (/)">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+    </button>
+  </div>
+
+  <div class="chrome-center">
+    <span id="chapter-label" class="chapter-label">The Cover</span>
+  </div>
+
+  <div class="chrome-right">
+    <button id="btn-bookmark" class="chrome-btn icon-only" title="Bookmark this page (B)" aria-pressed="false">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.5L5 22V3a1 1 0 0 1 1-1z"/></svg>
+    </button>
+    <button id="btn-sound" class="chrome-btn icon-only" title="Toggle ambient page sound" aria-pressed="false">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M3 10v4h4l5 5V5L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4.03v8.06A4.5 4.5 0 0 0 16.5 12z"/></svg>
+    </button>
+    <button id="btn-theme" class="chrome-btn icon-only" title="Toggle dark reading mode (D)" aria-pressed="false">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-7.14-7.14A9.13 9.13 0 0 0 12 3z"/></svg>
+    </button>
+    <button id="btn-fullscreen" class="chrome-btn icon-only" title="Fullscreen reading mode (F)">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Reading progress -->
+<div class="progress-rail" aria-hidden="true"><div id="progress-fill" class="progress-fill"></div></div>
+
+<!-- ============ TABLE OF CONTENTS PANEL ============ -->
+<aside id="toc-panel" class="side-panel" aria-label="Table of contents" hidden>
+  <div class="side-panel-head">
+    <h2>Table of Contents</h2>
+    <button class="panel-close" data-close="toc-panel" aria-label="Close">&times;</button>
+  </div>
+  <ol id="toc-list" class="toc-list"></ol>
+  <div class="side-panel-foot">
+    <button id="btn-print-resume" class="ghost-btn">Printable Résumé ↗</button>
+  </div>
+</aside>
+
+<!-- ============ SEARCH PANEL ============ -->
+<aside id="search-panel" class="side-panel" aria-label="Search inside the book" hidden>
+  <div class="side-panel-head">
+    <h2>Search This Book</h2>
+    <button class="panel-close" data-close="search-panel" aria-label="Close">&times;</button>
+  </div>
+  <input id="search-input" type="search" placeholder="Search chapters, projects, skills…" autocomplete="off">
+  <ul id="search-results" class="search-results"></ul>
+</aside>
+
+<div id="panel-scrim" class="panel-scrim" hidden></div>
+
+<!-- ============ BOOK ROOT ============ -->
+<main id="book-root" class="stage">
+
+  <!-- ---------- CLOSED BOOK ---------- -->
+  <section id="closed-book" class="closed-book" aria-label="Closed book cover">
+    <div class="book-shadow-ground"></div>
+    <button id="cover-hit" class="cover" aria-label="Open the book">
+      <div class="cover-face">
+        <div class="cover-frame">
+          <div class="cover-ornament top">&#10082;</div>
+          <p class="cover-eyebrow">Life, Projects &amp; Vision</p>
+          <h1 class="cover-title">Aarav<br>Mehta</h1>
+          <div class="cover-rule"></div>
+          <p class="cover-tagline">A working record of what I've built,<br>what I'm learning, and where it's going</p>
+          <div class="cover-ornament bottom">&#10082;</div>
+        </div>
+        <div class="cover-spine-hint"></div>
+        <div class="cover-sheen"></div>
+      </div>
+      <div class="cover-pages-edge" aria-hidden="true"></div>
+    </button>
+    <p class="open-hint">Click the book to open it</p>
+  </section>
+
+  <!-- ---------- OPEN BOOK ---------- -->
+  <section id="open-book" class="open-book" aria-label="Open book" hidden>
+    <button id="btn-close-book" class="close-book-btn" title="Close book (Esc)">Close Book</button>
+
+    <div class="book-frame">
+      <button id="nav-prev" class="edge-nav edge-prev" aria-label="Previous page">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M15.5 4.5 8 12l7.5 7.5 1.4-1.4L10.8 12l6.1-6.1z"/></svg>
+      </button>
+
+      <div class="spread" id="spread">
+        <div class="page-slot page-left" id="page-left"></div>
+
+        <div class="spine" aria-hidden="true"></div>
+
+        <div class="page-slot page-right" id="page-right-static"></div>
+        <div class="page-flip" id="page-flip">
+          <div class="page-face page-face-front" id="flip-front"></div>
+          <div class="page-face page-face-back" id="flip-back"></div>
+        </div>
+      </div>
+
+      <button id="nav-next" class="edge-nav edge-next" aria-label="Next page">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M8.5 4.5 16 12l-7.5 7.5-1.4-1.4L13.2 12 7.1 5.9z"/></svg>
+      </button>
+    </div>
+
+    <div class="bottom-bar">
+      <span id="page-indicator" class="page-indicator">Cover</span>
+      <div class="bookmark-ribbon" id="bookmark-ribbon" hidden>Bookmarked</div>
+    </div>
+  </section>
+
+  <!-- ---------- LIGHTBOX for certificates / photos ---------- -->
+  <div id="lightbox" class="lightbox" hidden>
+    <button id="lightbox-close" class="lightbox-close" aria-label="Close preview">&times;</button>
+    <div class="lightbox-inner" id="lightbox-inner"></div>
+  </div>
+
+</main>
+
+<div id="sr-announcer" class="sr-only" aria-live="polite"></div>
+
+<script src="js/data.js"></script>
+<script src="js/book.js"></script>
+</body>
+</html>
