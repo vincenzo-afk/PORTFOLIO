@@ -54,13 +54,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Parallax effect on mouse move for subtle depth
-    document.addEventListener('mousemove', (e) => {
-        // Calculate mouse position relative to center of screen
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
-        
-        // Apply slight rotation to scene for 3D feel
-        scene.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-    });
 });

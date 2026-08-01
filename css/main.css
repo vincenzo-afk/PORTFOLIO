@@ -100,7 +100,6 @@ body {
 .left-page-content {
     align-items: center;
     text-align: center;
-    background: #f7f9fc; /* Slight off-white to match the image gradient */
 }
 
 .profile-img-container {
@@ -208,7 +207,6 @@ body {
 
 /* Right Page - Timeline */
 .right-page-content {
-    background: #e9ecf2; /* Subtle contrast to the left page */
 }
 
 .section-title {

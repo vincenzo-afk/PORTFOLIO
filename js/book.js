@@ -41,11 +41,7 @@ class Book {
         // Click on pages to turn
         this.pages.forEach((page, index) => {
             page.addEventListener('click', (e) => {
-                // Determine if clicked on the right or left side
-                const rect = page.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                
-                // If page is on the right (rotation >= -90)
+                e.stopPropagation();
                 const rot = this.pageSprings[index].value;
                 if (rot > -90) {
                     // Turn left
@@ -61,7 +57,7 @@ class Book {
     openBook() {
         this.isOpen = true;
         this.bookElement.classList.add('is-open');
-        this.coverSpring.setTarget(-170); // Don't open to completely flat, leaves some depth
+        this.coverSpring.setTarget(-180); // Open flat
     }
     
     closeBook() {
@@ -82,7 +78,7 @@ class Book {
         this.pages.forEach((page, index) => {
             if (index < this.currentSheet) {
                 // Page should be on the left
-                this.pageSprings[index].setTarget(-178); // Slight angle for depth
+                this.pageSprings[index].setTarget(-180);
             } else {
                 // Page should be on the right
                 this.pageSprings[index].setTarget(0);
@@ -119,7 +115,15 @@ class Book {
         // Pages z-index
         this.pages.forEach((page, index) => {
             const rot = this.pageSprings[index].value;
-            if (rot > -90) {
+            page.style.setProperty('--rot-y', `${rot}deg`);
+            
+            // Check if page is in flight (mid-animation)
+            const isInFlight = rot < -2 && rot > -178;
+            
+            if (isInFlight) {
+                // Floating in flight: highest z-index so it never clips behind other pages
+                page.style.zIndex = 2000 + index;
+            } else if (rot > -90) {
                 // Right side: stack goes downwards
                 page.style.zIndex = total - index + 10;
             } else {
@@ -127,24 +131,26 @@ class Book {
                 page.style.zIndex = index + 10;
             }
             
-            // Dynamic shadow for bending effect
-            // Max shadow at -90 degrees
+            // Apply slight bend transform during the turn to simulate paper curl
+            // Also apply a base Z-offset to prevent z-fighting in preserve-3d space
+            const zOffset = rot > -90 ? -index * 0.5 : (index + 1) * 0.5;
+            
+            if (rot < 0 && rot > -180) {
+                const bend = Math.sin((rot / -180) * Math.PI) * 20; // Max bend at 90deg
+                page.style.setProperty('--bend', `${bend + zOffset}px`);
+                page.style.setProperty('--scale-x', `${1 - bend/400}`);
+            } else {
+                page.style.setProperty('--bend', `${zOffset}px`);
+                page.style.setProperty('--scale-x', `1`);
+            }
+            
+            // Update shadow opacities
             const progress = Math.abs(rot + 90) / 90; // 0 at -90, 1 at 0 and -180
             const shadowOpacity = 1 - progress;
             
             const frontFace = page.querySelector('.page-face.front');
             const backFace = page.querySelector('.page-face.back');
             
-            // Apply slight bend transform during the turn to simulate paper curl
-            // We use scaleX and a translation to curve the page
-            if (rot < 0 && rot > -180) {
-                const bend = Math.sin((rot / -180) * Math.PI) * 15; // Max bend at 90deg
-                page.style.transform = `rotateY(${rot}deg) translateZ(${bend}px) scaleX(${1 - bend/400})`;
-            } else {
-                page.style.transform = `rotateY(${rot}deg)`;
-            }
-            
-            // Update shadow opacities
             if (frontFace && frontFace.querySelector('.page-shadow')) {
                 frontFace.querySelector('.page-shadow').style.opacity = shadowOpacity * 0.5;
             }
