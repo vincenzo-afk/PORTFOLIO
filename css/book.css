@@ -1,0 +1,171 @@
+/* 3D Book Structure */
+.book {
+    position: relative;
+    width: var(--book-width);
+    height: var(--book-height);
+    transform-style: preserve-3d;
+    /* Initially open right away for the portfolio */
+    transform: translateX(calc(var(--book-width) / 2)) rotateX(20deg) rotateY(0deg) rotateZ(0deg);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+}
+
+.book-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--book-width);
+    height: var(--book-height);
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    border-radius: 2px 10px 10px 2px;
+}
+
+.cover-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: inherit;
+}
+
+.cover-face.front {
+    background: var(--cover-color);
+    box-shadow: 
+        inset 4px 0 10px rgba(0,0,0,0.1), /* Hinge shadow */
+        inset -1px 0 3px rgba(255,255,255,0.4), /* Edge highlight */
+        0 10px 30px rgba(0,0,0,0.4); /* Drop shadow */
+}
+
+.cover-face.back {
+    background: var(--cover-color);
+    transform: rotateY(180deg);
+}
+
+.inside-cover {
+    box-shadow: inset 5px 0 15px rgba(0,0,0,0.2);
+}
+
+/* Specific Cover Styles */
+.front-cover {
+    z-index: 1000;
+    transform: rotateY(var(--rot-y, -180deg)) translateZ(calc(var(--spine-width) / 2));
+}
+
+.back-cover {
+    z-index: 0;
+    transform: translateZ(calc(var(--spine-width) / -2));
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+.cover-design {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 40px;
+    background: var(--cover-color);
+}
+
+.book-title {
+    color: white;
+    font-size: 3rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.book-author {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+
+/* Spine */
+.spine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--spine-width);
+    height: var(--book-height);
+    background: var(--cover-color);
+    transform-origin: left center;
+    transform: rotateY(-90deg) translateX(calc(var(--spine-width) * -1));
+    border-radius: 50% 0 0 50% / 5% 0 0 5%;
+    box-shadow: 
+        inset 0 0 10px rgba(0,0,0,0.2),
+        inset -2px 0 5px rgba(255,255,255,0.2);
+}
+
+/* Pages Container */
+.pages {
+    position: absolute;
+    top: calc((var(--book-height) - var(--page-height)) / 2);
+    left: 10px; /* Slight offset so the cyan cover shows as a border */
+    width: var(--page-width);
+    height: var(--page-height);
+    transform-style: preserve-3d;
+    z-index: 100;
+}
+
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    will-change: transform;
+    cursor: pointer;
+    /* Default transform */
+    transform: rotateY(var(--rot-y, 0deg)) translateZ(var(--bend, 0px)) scaleX(var(--scale-x, 1));
+}
+
+/* Page Faces */
+.page-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--paper-color);
+    backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.page-face.front {
+    border-radius: 0 4px 4px 0;
+    box-shadow: 
+        inset 10px 0 20px rgba(0,0,0,0.05), /* Spine shadow */
+        inset -1px 0 2px rgba(255,255,255,1), /* Edge highlight */
+        1px 1px 3px rgba(0,0,0,0.1); /* Drop shadow onto next page */
+}
+
+.page-face.back {
+    transform: rotateY(180deg);
+    border-radius: 4px 0 0 4px;
+    box-shadow: 
+        inset -10px 0 20px rgba(0,0,0,0.05), /* Spine shadow */
+        inset 1px 0 2px rgba(255,255,255,1),
+        -1px 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Dynamic Shadow Overlay for Curling Effect */
+.page-shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(to right, 
+        rgba(0,0,0,0) 0%, 
+        rgba(0,0,0,0.1) 50%, 
+        rgba(0,0,0,0) 100%);
+    opacity: 0;
+}
