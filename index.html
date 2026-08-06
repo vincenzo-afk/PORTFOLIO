@@ -3,149 +3,1263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clean Book Template</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/book.css">
+    <title>Bharani Kumar S — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-light: #111111;
+            --bg-card: #161616;
+            --text: #ffffff;
+            --text-muted: #888888;
+            --text-dim: #555555;
+            --accent: #c8ff00;
+            --accent-dark: #a8d900;
+            --border: #222222;
+            --border-light: #333333;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        ::selection { background: var(--accent); color: var(--bg); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* NAVIGATION */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 24px 48px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10,10,10,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: all 0.3s ease;
+        }
+        .nav.scrolled { padding: 16px 48px; background: rgba(10,10,10,0.95); }
+        .nav-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px; font-weight: 700; letter-spacing: 2px;
+            color: var(--text); text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a {
+            color: var(--text-muted); text-decoration: none; font-size: 13px;
+            font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+            transition: color 0.3s ease; position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 0; height: 1px; background: var(--accent); transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; }
+        .nav-toggle span { width: 24px; height: 2px; background: var(--text); transition: all 0.3s ease; }
+        .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+        .nav-toggle.active span:nth-child(2) { opacity: 0; }
+        .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+        .mobile-menu {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg); z-index: 999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            gap: 40px; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .mobile-menu.active { opacity: 1; pointer-events: all; }
+        .mobile-menu a {
+            color: var(--text); text-decoration: none; font-size: 32px; font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif; letter-spacing: 2px; text-transform: uppercase;
+            opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
+        }
+        .mobile-menu.active a { opacity: 1; transform: translateY(0); }
+        .mobile-menu.active a:nth-child(1) { transition-delay: 0.1s; }
+        .mobile-menu.active a:nth-child(2) { transition-delay: 0.15s; }
+        .mobile-menu.active a:nth-child(3) { transition-delay: 0.2s; }
+        .mobile-menu.active a:nth-child(4) { transition-delay: 0.25s; }
+        .mobile-menu.active a:nth-child(5) { transition-delay: 0.3s; }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            position: relative; overflow: hidden;
+            padding: 120px 24px 80px;
+        }
+        .hero-bg-text {
+            position: absolute;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(80px, 18vw, 280px); font-weight: 900;
+            letter-spacing: -4px; color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.08);
+            white-space: nowrap; z-index: 1; user-select: none;
+            animation: heroTextPulse 4s ease-in-out infinite;
+        }
+        @keyframes heroTextPulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .hero-content { position: relative; z-index: 2; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .hero-image {
+            width: 280px; height: 380px; border-radius: 20px; overflow: hidden;
+            margin-bottom: -60px; position: relative; z-index: 3;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            animation: heroFloat 6s ease-in-out infinite;
+        }
+        @keyframes heroFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .hero-image img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%) contrast(1.1); transition: filter 0.5s ease; }
+        .hero-image:hover img { filter: grayscale(0%) contrast(1); }
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(48px, 10vw, 140px); font-weight: 900;
+            letter-spacing: -3px; line-height: 1; margin-top: 20px;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero-subtitle { margin-top: 16px; font-size: 18px; color: var(--text-muted); font-weight: 400; }
+        .hero-subtitle span { color: var(--text); font-weight: 600; }
+        .hero-subtitle em { color: var(--text-muted); font-style: italic; }
+        .hero-cta { margin-top: 40px; display: flex; gap: 16px; align-items: center; }
+        .btn-primary {
+            background: var(--accent); color: var(--bg); padding: 14px 32px;
+            border-radius: 100px; font-size: 14px; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease; border: none; cursor: pointer;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(200,255,0,0.3); }
+        .btn-outline {
+            background: transparent; color: var(--text); padding: 14px 32px;
+            border-radius: 100px; font-size: 14px; font-weight: 500;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+            border: 1px solid var(--border-light); transition: all 0.3s ease; cursor: pointer;
+        }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* INTRO */
+        .intro {
+            padding: 120px 48px; max-width: 1400px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+        }
+        .intro-image { position: relative; }
+        .intro-image img { width: 100%; max-width: 450px; border-radius: 24px; filter: grayscale(20%); transition: filter 0.5s ease; }
+        .intro-image:hover img { filter: grayscale(0%); }
+        .intro-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(48px, 8vw, 100px); font-weight: 900;
+            background: linear-gradient(180deg, #fff 0%, #444 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            line-height: 1; margin-bottom: 32px;
+        }
+        .intro-text {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 32px; font-size: 15px;
+            line-height: 1.8; color: var(--text-muted);
+        }
+        .intro-text strong { color: var(--text); font-weight: 600; }
+
+        /* MARQUEE */
+        .marquee-container { overflow: hidden; padding: 40px 0;
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 60px 0;
+        }
+        .marquee { display: flex; gap: 48px; animation: marquee 30s linear infinite; white-space: nowrap; }
+        .marquee:hover { animation-play-state: paused; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee-item { font-size: 14px; color: var(--text-dim); font-weight: 500;
+            letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; transition: color 0.3s ease;
+        }
+        .marquee-item:hover { color: var(--accent); }
+
+        /* SERVICES */
+        .services { padding: 100px 48px; max-width: 1400px; margin: 0 auto; }
+        .services-header { text-align: center; margin-bottom: 60px; }
+        .services-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(36px, 6vw, 72px); font-weight: 900;
+            background: linear-gradient(180deg, #fff 0%, #555 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            line-height: 1.1;
+        }
+        .services-list { display: flex; flex-direction: column; gap: 2px; }
+        .service-item {
+            border: 1px solid var(--border); border-radius: 12px;
+            overflow: hidden; transition: all 0.4s ease; cursor: pointer;
+        }
+        .service-item:hover { border-color: var(--accent); }
+        .service-item.active { background: var(--accent); border-color: var(--accent); }
+        .service-item.active .service-header { color: var(--bg); }
+        .service-item.active .service-number { color: var(--bg); }
+        .service-item.active .service-arrow { color: var(--bg); transform: rotate(180deg); }
+        .service-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 24px 32px; font-size: 16px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase; color: var(--text); transition: all 0.3s ease;
+        }
+        .service-left { display: flex; align-items: center; gap: 24px; }
+        .service-number { font-size: 14px; color: var(--text-dim); font-weight: 500; min-width: 24px; transition: color 0.3s ease; }
+        .service-arrow { font-size: 20px; color: var(--accent); transition: all 0.3s ease; }
+        .service-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease, padding 0.5s ease; padding: 0 32px; }
+        .service-item.active .service-content { max-height: 300px; padding: 0 32px 24px; }
+        .service-content-inner {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+            opacity: 0; transform: translateY(10px); transition: all 0.4s ease 0.1s;
+        }
+        .service-item.active .service-content-inner { opacity: 1; transform: translateY(0); }
+        .service-features { list-style: none; }
+        .service-features li { padding: 6px 0; font-size: 14px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .service-features li::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex-shrink: 0; }
+        .service-item.active .service-features li { color: rgba(0,0,0,0.7); }
+        .service-item.active .service-features li::before { background: var(--bg); }
+        .service-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+        .service-item.active .service-desc { color: rgba(0,0,0,0.7); }
+
+        /* WORK */
+        .work { padding: 100px 48px; max-width: 1400px; margin: 0 auto; }
+        .work-header { display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 60px; flex-wrap: wrap; gap: 24px;
+        }
+        .work-title { font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(36px, 5vw, 64px); font-weight: 900; line-height: 1;
+        }
+        .work-title span { font-style: italic; font-weight: 400; color: var(--text-muted); }
+        .work-desc { max-width: 400px; font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+        .work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 32px; }
+        .work-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 20px; overflow: hidden; transition: all 0.4s ease; cursor: pointer;
+        }
+        .work-card:hover { border-color: var(--border-light); transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        .work-card-image {
+            width: 100%; height: 220px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .work-card-image::before {
+            content: ''; position: absolute; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(200,255,0,0.05) 0%, transparent 70%);
+            animation: cardGlow 4s ease-in-out infinite;
+        }
+        @keyframes cardGlow { 0%,100% { transform: translate(-25%,-25%) scale(1); } 50% { transform: translate(-25%,-25%) scale(1.2); } }
+        .work-card-icon {
+            font-size: 64px; font-weight: 900; font-family: 'Space Grotesk', sans-serif;
+            color: rgba(200,255,0,0.3); position: relative; z-index: 1;
+        }
+        .work-card-body { padding: 28px; }
+        .work-card-number { font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+        .work-card-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+        .work-card-title em { font-style: italic; font-weight: 400; color: var(--text-muted); }
+        .work-card-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+        .work-card-actions { display: flex; gap: 12px; }
+        .btn-small { padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s ease;
+        }
+        .btn-small-primary { background: var(--accent); color: var(--bg); }
+        .btn-small-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(200,255,0,0.25); }
+        .btn-small-outline { background: transparent; color: var(--text); border: 1px solid var(--border-light); }
+        .btn-small-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* CONTACT */
+        .contact { padding: 100px 48px; max-width: 1400px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+        }
+        .contact-left { position: relative; }
+        .contact-globe {
+            width: 100%; max-width: 500px; aspect-ratio: 1; border-radius: 50%;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(200,255,0,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(0,200,255,0.05) 0%, transparent 50%);
+            position: relative; overflow: hidden;
+        }
+        .contact-globe::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,0.03) 20px),
+                repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,0.03) 20px);
+            border-radius: 50%;
+        }
+        .contact-globe::after {
+            content: ''; position: absolute; inset: -50%;
+            background: radial-gradient(circle, rgba(200,255,0,0.08) 0%, transparent 60%);
+            animation: globeRotate 20s linear infinite;
+        }
+        @keyframes globeRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .contact-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(36px, 5vw, 64px); font-weight: 900;
+            background: linear-gradient(180deg, #fff 0%, #555 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: 32px;
+        }
+        .contact-email { font-size: 24px; font-weight: 600; color: var(--text);
+            text-decoration: none; display: block; margin-bottom: 24px; transition: color 0.3s ease;
+        }
+        .contact-email:hover { color: var(--accent); }
+        .contact-social { display: flex; gap: 16px; margin-bottom: 40px; }
+        .contact-social a {
+            width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); text-decoration: none; transition: all 0.3s ease; font-size: 18px;
+        }
+        .contact-social a:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+        .contact-form { display: flex; flex-direction: column; gap: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .form-group input, .form-group textarea {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 16px; color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif;
+            outline: none; transition: all 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200,255,0,0.1); }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-dim); }
+        .form-group textarea { min-height: 140px; resize: vertical; }
+        .form-submit {
+            background: var(--text); color: var(--bg); padding: 16px 32px;
+            border-radius: 12px; font-size: 15px; font-weight: 600;
+            border: none; cursor: pointer; transition: all 0.3s ease; margin-top: 8px;
+        }
+        .form-submit:hover { background: var(--accent); transform: translateY(-2px); }
+
+        /* FOOTER */
+        .footer { position: relative; padding: 80px 48px 40px; overflow: hidden; border-top: 1px solid var(--border); }
+        .footer-top { display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 80px; flex-wrap: wrap; gap: 40px;
+        }
+        .footer-email { font-size: clamp(24px, 4vw, 48px); font-weight: 700; color: var(--text); text-decoration: none; transition: color 0.3s ease; }
+        .footer-email:hover { color: var(--accent); }
+        .footer-nav { display: flex; gap: 32px; list-style: none; }
+        .footer-nav a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color 0.3s ease; }
+        .footer-nav a:hover { color: var(--text); }
+        .footer-cta { text-align: right; }
+        .footer-cta p { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+        .footer-brand-container { position: relative; text-align: center; padding: 60px 0; }
+        .footer-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(60px, 15vw, 200px); font-weight: 900;
+            letter-spacing: -4px; color: var(--text); line-height: 1;
+            position: relative; z-index: 2;
+        }
+        .footer-glow {
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 80%; height: 200px;
+            background: radial-gradient(ellipse at center, rgba(0,255,100,0.3) 0%, rgba(0,200,100,0.15) 30%, transparent 70%);
+            filter: blur(40px); z-index: 1;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+        @keyframes glowPulse { 0%,100% { opacity: 0.6; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.1); } }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center;
+            padding-top: 24px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 16px;
+        }
+        .footer-copyright { font-size: 13px; color: var(--text-dim); }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { font-size: 13px; color: var(--text-dim); text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: var(--text); }
+
+        /* ANIMATIONS */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .intro { grid-template-columns: 1fr; gap: 48px; text-align: center; }
+            .intro-image { display: flex; justify-content: center; }
+            .contact { grid-template-columns: 1fr; gap: 48px; }
+            .contact-globe { max-width: 350px; margin: 0 auto; }
+            .service-content-inner { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav { padding: 20px 24px; }
+            .nav-links { display: none; }
+            .nav-toggle { display: flex; }
+            .hero { padding: 100px 24px 60px; }
+            .hero-image { width: 220px; height: 300px; }
+            .intro, .services, .work, .contact { padding: 80px 24px; }
+            .work-grid { grid-template-columns: 1fr; }
+            .work-header { flex-direction: column; align-items: flex-start; }
+            .form-row { grid-template-columns: 1fr; }
+            .footer { padding: 60px 24px 30px; }
+            .footer-top { flex-direction: column; gap: 32px; }
+            .footer-cta { text-align: left; }
+            .footer-nav { flex-wrap: wrap; }
+        }
+        @media (max-width: 480px) {
+            .hero-image { width: 180px; height: 250px; }
+            .btn-primary, .btn-outline { padding: 12px 24px; font-size: 13px; }
+            .service-header { padding: 18px 20px; font-size: 14px; }
+            .work-card-body { padding: 20px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="ambient-background"></div>
-    
-    <div class="scene" id="scene">
-        <div class="book" id="book">
-            <!-- Book Cover -->
-            <div class="book-cover front-cover" id="front-cover">
-                <div class="cover-face front">
-                    <div class="cover-design">
-                        <h1 class="book-title">Title Here</h1>
-                        <p class="book-author">Subtitle / Author</p>
-                    </div>
-                </div>
-                <div class="cover-face back inside-cover">
-                    <div class="page-content center-content left-page-content">
-                        <!-- Left inside cover content goes here -->
-                    </div>
-                </div>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <a href="#" class="nav-brand">BHARANI</a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#work">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-toggle" id="navToggle">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home" onclick="closeMenu()">Home</a>
+        <a href="#about" onclick="closeMenu()">About</a>
+        <a href="#services" onclick="closeMenu()">Services</a>
+        <a href="#work" onclick="closeMenu()">Projects</a>
+        <a href="#contact" onclick="closeMenu()">Contact</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-bg-text">PORTFOLIO</div>
+        <div class="hero-content">
+            <div class="hero-image">
+                <img src="https://github.com/vincenzo-afk.png" alt="Bharani Kumar S" onerror="this.src='data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22380%22&gt;&lt;rect fill=%22%23111%22 width=%22280%22 height=%22380%22/&gt;&lt;text fill=%22%23555%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 font-size=%2240%22 font-family=%22sans-serif%22&gt;BK&lt;/text&gt;&lt;/svg&gt;'">
             </div>
-
-            <!-- Pages -->
-            <div class="pages" id="pages-container">
-                <!-- Page 1 (Spread 1 Right) -->
-                <div class="page" data-page="1">
-                    <div class="page-face front">
-                        <div class="page-content right-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">1</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                    <div class="page-face back">
-                        <div class="page-content left-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">2</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                </div>
-                
-                <!-- Page 2 (Spread 2 Right) -->
-                <div class="page" data-page="2">
-                    <div class="page-face front">
-                        <div class="page-content right-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">3</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                    <div class="page-face back">
-                        <div class="page-content left-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">4</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                </div>
-
-                <!-- Page 3 (Spread 3 Right) -->
-                <div class="page" data-page="3">
-                    <div class="page-face front">
-                        <div class="page-content right-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">5</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                    <div class="page-face back">
-                        <div class="page-content left-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">6</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                </div>
-
-                <!-- Page 4 (Spread 4 Right) -->
-                <div class="page" data-page="4">
-                    <div class="page-face front">
-                        <div class="page-content right-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">7</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                    <div class="page-face back">
-                        <div class="page-content left-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">8</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                </div>
-                
-                <!-- Page 5 (Spread 5 Right) -->
-                <div class="page" data-page="5">
-                    <div class="page-face front">
-                        <div class="page-content right-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">9</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                    <div class="page-face back">
-                        <div class="page-content left-page-content">
-                            <!-- Page Content Here -->
-                            <span class="page-number-center">10</span>
-                        </div>
-                        <div class="page-shadow"></div>
-                    </div>
-                </div>
+            <h1 class="hero-title">PORTFOLIO</h1>
+            <p class="hero-subtitle"><span>Software</span> <em>Developer</em></p>
+            <div class="hero-cta">
+                <a href="#work" class="btn-primary">View Projects &darr;</a>
+                <a href="#contact" class="btn-outline">Contact</a>
             </div>
+        </div>
+    </section>
 
-            <!-- Back Cover -->
-            <div class="book-cover back-cover" id="back-cover">
-                <div class="cover-face front inside-cover">
-                    <!-- Right inside cover content goes here -->
-                </div>
-                <div class="cover-face back">
-                    <div class="cover-design"></div>
-                </div>
-                <!-- Spine -->
-                <div class="spine"></div>
+    <!-- Intro -->
+    <section class="intro" id="about">
+        <div class="intro-image fade-in">
+            <img src="https://github.com/vincenzo-afk.png" alt="Bharani Kumar S" onerror="this.src='data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22450%22 height=%22600%22&gt;&lt;rect fill=%22%23111%22 width=%22450%22 height=%22600%22/&gt;&lt;text fill=%22%23555%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 font-size=%2260%22 font-family=%22sans-serif%22&gt;BK&lt;/text&gt;&lt;/svg&gt;'">
+        </div>
+        <div class="fade-in stagger-1">
+            <h2 class="intro-label">Intro</h2>
+            <div class="intro-text">
+                <p>Hey, I'm <strong>Bharani Kumar</strong>. An enthusiastic AI full-stack developer who loves to build state-of-the-art web and mobile applications. I love turning concepts into scalable products using tech stack like <strong>React, FastAPI, Node.js</strong>, and artificial intelligence technologies. I always strive to keep my code clean and design great user experience along with learning new technologies like <strong>LLMs, LangChain, and MCP</strong>.</p>
+                <p style="margin-top:16px">Currently a <strong>2nd-year B.E. CSE student</strong> at Kingston Engineering College, Vellore. <strong>55+ public repositories</strong>, <strong>70+ AI projects</strong>, and a passion for real-world impact.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-container">
+        <div class="marquee">
+            <span class="marquee-item">Python</span><span class="marquee-item">TypeScript</span><span class="marquee-item">JavaScript</span><span class="marquee-item">Rust</span><span class="marquee-item">Kotlin</span><span class="marquee-item">Dart</span><span class="marquee-item">React</span><span class="marquee-item">Next.js</span><span class="marquee-item">FastAPI</span><span class="marquee-item">Node.js</span><span class="marquee-item">PyTorch</span><span class="marquee-item">TensorFlow</span><span class="marquee-item">Docker</span><span class="marquee-item">Git</span><span class="marquee-item">PostgreSQL</span><span class="marquee-item">MongoDB</span><span class="marquee-item">Redis</span><span class="marquee-item">Supabase</span><span class="marquee-item">Tailwind CSS</span><span class="marquee-item">Framer Motion</span><span class="marquee-item">YOLO</span><span class="marquee-item">OpenCV</span><span class="marquee-item">Hugging Face</span><span class="marquee-item">OpenAI</span><span class="marquee-item">LangChain</span><span class="marquee-item">MCP</span><span class="marquee-item">Prompt Engineering</span><span class="marquee-item">Agentic AI</span><span class="marquee-item">ChatGPT</span><span class="marquee-item">VS Code</span><span class="marquee-item">GitHub</span><span class="marquee-item">Postman</span><span class="marquee-item">CI/CD</span>
+            <span class="marquee-item">Python</span><span class="marquee-item">TypeScript</span><span class="marquee-item">JavaScript</span><span class="marquee-item">Rust</span><span class="marquee-item">Kotlin</span><span class="marquee-item">Dart</span><span class="marquee-item">React</span><span class="marquee-item">Next.js</span><span class="marquee-item">FastAPI</span><span class="marquee-item">Node.js</span><span class="marquee-item">PyTorch</span><span class="marquee-item">TensorFlow</span><span class="marquee-item">Docker</span><span class="marquee-item">Git</span><span class="marquee-item">PostgreSQL</span><span class="marquee-item">MongoDB</span><span class="marquee-item">Redis</span><span class="marquee-item">Supabase</span><span class="marquee-item">Tailwind CSS</span><span class="marquee-item">Framer Motion</span><span class="marquee-item">YOLO</span><span class="marquee-item">OpenCV</span><span class="marquee-item">Hugging Face</span><span class="marquee-item">OpenAI</span><span class="marquee-item">LangChain</span><span class="marquee-item">MCP</span><span class="marquee-item">Prompt Engineering</span><span class="marquee-item">Agentic AI</span><span class="marquee-item">ChatGPT</span><span class="marquee-item">VS Code</span><span class="marquee-item">GitHub</span><span class="marquee-item">Postman</span><span class="marquee-item">CI/CD</span>
         </div>
     </div>
 
-    <!-- UI Controls -->
-    <div class="ui-controls">
-        <button id="btn-prev" class="nav-btn" aria-label="Previous Page">
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <button id="btn-next" class="nav-btn" aria-label="Next Page">
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
-    </div>
+    <!-- Services -->
+    <section class="services" id="services">
+        <div class="services-header fade-in">
+            <h2 class="services-title">WHAT WE<br>CAN DO</h2>
+        </div>
+        <div class="services-list">
+            <div class="service-item active" onclick="toggleService(this)">
+                <div class="service-header">
+                    <div class="service-left"><span class="service-number">01</span><span>AI Full Stack Development</span></div>
+                    <span class="service-arrow">&darr;</span>
+                </div>
+                <div class="service-content">
+                    <div class="service-content-inner">
+                        <ul class="service-features">
+                            <li>LLM Integration (GPT, Claude, Gemini)</li><li>AI Agent Systems</li><li>RAG Applications</li><li>Computer Vision (YOLO, OpenCV)</li><li>Reinforcement Learning</li><li>Multi-modal AI Systems</li>
+                        </ul>
+                        <p class="service-desc">Building end-to-end AI-powered applications from autonomous agents to real-time screen analysis. Experience with 70+ AI projects including NOVA, IRIS, and SocialGuard-RL.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-item" onclick="toggleService(this)">
+                <div class="service-header">
+                    <div class="service-left"><span class="service-number">02</span><span>Frontend Development</span></div>
+                    <span class="service-arrow">&darr;</span>
+                </div>
+                <div class="service-content">
+                    <div class="service-content-inner">
+                        <ul class="service-features">
+                            <li>React &amp; Next.js Applications</li><li>Responsive UI/UX Design</li><li>Tailwind CSS &amp; shadcn/ui</li><li>Framer Motion Animations</li><li>TypeScript Development</li><li>PWA Development</li>
+                        </ul>
+                        <p class="service-desc">Crafting modern, responsive web interfaces with smooth animations and intuitive user experiences. From sleek dark-themed UIs to interactive 3D portfolios.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-item" onclick="toggleService(this)">
+                <div class="service-header">
+                    <div class="service-left"><span class="service-number">03</span><span>Backend &amp; API Development</span></div>
+                    <span class="service-arrow">&darr;</span>
+                </div>
+                <div class="service-content">
+                    <div class="service-content-inner">
+                        <ul class="service-features">
+                            <li>FastAPI &amp; Express.js APIs</li><li>PostgreSQL &amp; MongoDB</li><li>Redis Caching</li><li>Supabase Integration</li><li>REST &amp; WebSocket APIs</li><li>Database Architecture</li>
+                        </ul>
+                        <p class="service-desc">Scalable backend systems with robust API design, real-time data handling, and efficient database management for high-performance applications.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-item" onclick="toggleService(this)">
+                <div class="service-header">
+                    <div class="service-left"><span class="service-number">04</span><span>AI &amp; Automation</span></div>
+                    <span class="service-arrow">&darr;</span>
+                </div>
+                <div class="service-content">
+                    <div class="service-content-inner">
+                        <ul class="service-features">
+                            <li>Machine Learning Pipelines</li><li>Natural Language Processing</li><li>Computer Vision Systems</li><li>Automated Workflows</li><li>Chatbot Development</li><li>Voice &amp; Speech AI</li>
+                        </ul>
+                        <p class="service-desc">End-to-end AI solutions from data preprocessing to deployment. Specialized in LLM agents, computer vision, and intelligent automation systems.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-item" onclick="toggleService(this)">
+                <div class="service-header">
+                    <div class="service-left"><span class="service-number">05</span><span>Mobile Development</span></div>
+                    <span class="service-arrow">&darr;</span>
+                </div>
+                <div class="service-content">
+                    <div class="service-content-inner">
+                        <ul class="service-features">
+                            <li>Flutter Cross-platform Apps</li><li>React Native Development</li><li>Native Kotlin (Android)</li><li>Responsive Mobile UI</li><li>API Integration</li><li>Performance Optimization</li>
+                        </ul>
+                        <p class="service-desc">Building responsive cross-platform mobile applications with smooth performance, intuitive interfaces, and seamless integration with backend services.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-item" onclick="toggleService(this)">
+                <div class="service-header">
+                    <div class="service-left"><span class="service-number">06</span><span>DevOps &amp; Tools</span></div>
+                    <span class="service-arrow">&darr;</span>
+                </div>
+                <div class="service-content">
+                    <div class="service-content-inner">
+                        <ul class="service-features">
+                            <li>Docker Containerization</li><li>GitHub Actions CI/CD</li><li>Vercel &amp; Cloud Deployment</li><li>Cloudflare R2 Storage</li><li>Linux Server Management</li><li>Turborepo Monorepos</li>
+                        </ul>
+                        <p class="service-desc">Streamlined deployment pipelines, containerized applications, and efficient development workflows for production-ready systems.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Selected Work -->
+    <section class="work" id="work">
+        <div class="work-header fade-in">
+            <h2 class="work-title">SELECTED <span>work</span></h2>
+            <p class="work-desc">As a full-stack developer using modern ideas, simplicity design and universal visual identification tailored to dedicated and current market.</p>
+        </div>
+        <div class="work-grid">
+            <!-- 1. NOVA -->
+            <div class="work-card fade-in stagger-1">
+                <div class="work-card-image"><div class="work-card-icon">N</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">01</div>
+                    <h3 class="work-card-title">NOVA <em>AI</em></h3>
+                    <p class="work-card-desc">Autonomous AI system with voice, vision & multi-agent execution. Persistent, provider-agnostic AI runtime with Observe &rarr; Remember &rarr; Reason &rarr; Act &rarr; Verify loop.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/NOVA" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 2. IRIS -->
+            <div class="work-card fade-in stagger-2">
+                <div class="work-card-image"><div class="work-card-icon">I</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">02</div>
+                    <h3 class="work-card-title">IRIS <em>AI</em></h3>
+                    <p class="work-card-desc">Real-time screen AI assistant that follows your cursor to assist and teach you anything on your PC live. Hyper-powerful AI with contextual screen analysis.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/IRIS" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 3. NEXUS-ENGINE -->
+            <div class="work-card fade-in stagger-3">
+                <div class="work-card-image"><div class="work-card-icon">NX</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">03</div>
+                    <h3 class="work-card-title">NEXUS <em>ENGINE</em></h3>
+                    <p class="work-card-desc">Full-featured search engine in Rust. BM25 + PageRank ranking, BPE query language, Tor mode, 228+ unit tests, AI reranking, encrypted search, neural embeddings.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/NEXUS-ENGINE" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 4. SocialGuard-RL -->
+            <div class="work-card fade-in stagger-4">
+                <div class="work-card-image"><div class="work-card-icon">SG</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">04</div>
+                    <h3 class="work-card-title">SocialGuard <em>RL</em></h3>
+                    <p class="work-card-desc">RL-based social media content moderation. Meta OpenEnv Hackathon 2026. Gym-compliant agents for spam, misinformation, and bot network dismantling.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/SocialGuard-RL" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                        <a href="https://huggingface.co/spaces/bk2007/SocialGuard-RL" class="btn-small btn-small-outline" target="_blank">Live &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 5. Zen-2 -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">Z2</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">05</div>
+                    <h3 class="work-card-title">Zen <em>2</em></h3>
+                    <p class="work-card-desc">124M-parameter decoder-only LLM built from scratch. RoPE, RMSNorm, SwiGLU, GQA, KV Cache, BPE Tokenizer, full training pipeline. Research-grade quality.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Zen-2" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 6. VisionX -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">VX</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">06</div>
+                    <h3 class="work-card-title">Vision <em>X</em></h3>
+                    <p class="work-card-desc">Real-time object detection & video intelligence. YOLO + ByteTrack + FastAPI. Detects objects in images/videos/live webcam with persistent ID tracking.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/VisionX" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 7. TN Land Tracker -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">TN</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">07</div>
+                    <h3 class="work-card-title">TN Land <em>Tracker</em></h3>
+                    <p class="work-card-desc">Free public civic tech for Tamil Nadu land ownership. Patta, chitta, A-register, FMB sketches, interactive maps. Next.js 14 + FastAPI + Supabase. &#8377;0/month cost.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/tn-land-tracker" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 8. xithsense -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">XS</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">08</div>
+                    <h3 class="work-card-title">xith <em>sense</em></h3>
+                    <p class="work-card-desc">AI-powered fantasy cricket platform. 22,062 matches of data. Multi-model ensemble (XGBoost + LightGBM + CatBoost). Smart team optimizer with LLM explainability.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/xithsense" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 9. AgentWeb -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">AW</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">09</div>
+                    <h3 class="work-card-title">Agent <em>Web</em></h3>
+                    <p class="work-card-desc">Internet Intelligence Platform. Search, browser execution, extraction, monitoring, memory, graph reasoning, cited answers. One programmable layer for web intelligence.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/AgentWeb" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 10. DropLink -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">DL</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">10</div>
+                    <h3 class="work-card-title">Drop <em>Link</em></h3>
+                    <p class="work-card-desc">Decentralized P2P sharing platform. Files, folders, links, chat over encrypted WebRTC. Zero server storage, AES-256-GCM encryption, no accounts required.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/DropLink" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 11. OpenAgentNet -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">OA</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">11</div>
+                    <h3 class="work-card-title">OpenAgent <em>Net</em></h3>
+                    <p class="work-card-desc">Open infrastructure standard for AI agent networks. Agent registry, discovery, messaging (NATS), capability negotiation, reputation system, shared memory.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/OpenAgentNet" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 12. KingstonConnect -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">KC</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">12</div>
+                    <h3 class="work-card-title">Kingston <em>Connect</em></h3>
+                    <p class="work-card-desc">Campus social & resource-sharing platform for Kingston Engineering College. Seamless communication, collaboration, and academic management system.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/KingstonConnect" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                        <a href="https://kingston-connect.vercel.app" class="btn-small btn-small-outline" target="_blank">Live &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 13. OMNI -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">O</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">13</div>
+                    <h3 class="work-card-title">OMNI <em>AI</em></h3>
+                    <p class="work-card-desc">AI model scanning entire codebase for all kinds of bugs automatically. Comprehensive static and dynamic analysis pipeline for code quality assurance.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/OMNI" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 14. CircuitWeaver -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">CW</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">14</div>
+                    <h3 class="work-card-title">Circuit <em>Weaver</em></h3>
+                    <p class="work-card-desc">Photograph old circuit boards &rarr; AI reverse-engineers full modern rebuild blueprint. Maps every component and trace for hardware reconstruction.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/CircuitWeaver" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 15. H.O.M.E.R. -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">H</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">15</div>
+                    <h3 class="work-card-title">H.O.M.E.R. <em>AI</em></h3>
+                    <p class="work-card-desc">Multimodal chatbot with voice, vision, chat & image generation. Conversational AI with multi-modal input/output capabilities.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/H.O.M.E.R." class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 16. TruthNet -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">TN</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">16</div>
+                    <h3 class="work-card-title">Truth <em>Net</em></h3>
+                    <p class="work-card-desc">AI misinformation detection & news credibility analysis. Classifies REAL/FAKE with confidence scores + explanations. Model-agnostic architecture.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/TruthNet" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 17. ReconGPT -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">RG</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">17</div>
+                    <h3 class="work-card-title">Recon <em>GPT</em></h3>
+                    <p class="work-card-desc">Browser-based OSINT intelligence tool. AI-generated recon methodology, attack surface analysis, DNS/IP/breach lookups with auto target detection.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/ReconGPT" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 18. Lucie-AI -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">L</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">18</div>
+                    <h3 class="work-card-title">Lucie <em>AI</em></h3>
+                    <p class="work-card-desc">Late-night voice chats with Live2D AI companion. Real-time voice chat, emotion-driven expressions, lip sync, conversation memory via ChromaDB.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Lucie-AI" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 19. Infera -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">IF</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">19</div>
+                    <h3 class="work-card-title">Infera <em>ChaosVoice</em></h3>
+                    <p class="work-card-desc">Real-time mobile voice changer with 14-stage DSP engine. Demon, Robot, Crushed Radio, Glitch presets for VoIP calls. Flutter + Kotlin native DSP.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Infera" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 20. chaos-vpn -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">CV</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">20</div>
+                    <h3 class="work-card-title">chaos <em>vpn</em></h3>
+                    <p class="work-card-desc">System-wide real-time voice changer for Android/iOS. 10-layer DSP: gain boost, echo, crackle, distortion, bit crusher, pitch wobble, reverb, hard clipping.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/chaos-vpn" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 21. DEVNEXUS -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">DN</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">21</div>
+                    <h3 class="work-card-title">DEV <em>NEXUS</em></h3>
+                    <p class="work-card-desc">AI-Powered Creator Command Center. GitHub stats, daily AI progress narratives, voice TODOs, hackathon mission control, context-aware AI copilot.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/DEVNEXUS" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 22. PrivatePulse-AI -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">PP</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">22</div>
+                    <h3 class="work-card-title">PrivatePulse <em>AI</em></h3>
+                    <p class="work-card-desc">RAG-powered document intelligence with privacy-first design. Local processing, multi-format support, session isolation, entity masking, full audit trail.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/PrivatePulse-AI" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 23. Synapse -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">SY</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">23</div>
+                    <h3 class="work-card-title">Synapse <em>OS</em></h3>
+                    <p class="work-card-desc">Personal Operating System PWA. Local-first, offline-first. Unifies habits, tasks, workouts, study planning, hydration, nutrition, sleep, finance, CRM, calendar.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Synapse" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 24. vanta-code -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">VC</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">24</div>
+                    <h3 class="work-card-title">vanta <em>code</em></h3>
+                    <p class="work-card-desc">Autonomous CLI coding agent with soul. Textual TUI, 8 commands, Groq LLM, ChromaDB memory, NetworkX knowledge graph, 3 themes, AutoDebug, AI commits.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/vanta-code" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 25. NOVA_FRAMEWORK -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">NF</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">25</div>
+                    <h3 class="work-card-title">NOVA <em>FRAMEWORK</em></h3>
+                    <p class="work-card-desc">Persistent AI runtime architecture spec. 50+ documentation folders covering every subsystem from vision to disaster recovery. Provider-agnostic design.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/NOVA_FRAMEWORK" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 26. SlideForge -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">SF</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">26</div>
+                    <h3 class="work-card-title">Slide <em>Forge</em></h3>
+                    <p class="work-card-desc">AI-Powered Presentation Generator. Pure HTML + CSS + Vanilla JS &mdash; no frameworks, no build tools. Clean, minimal, production-ready slides.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/SlideForge" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 27. sudokuflow -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">SF</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">27</div>
+                    <h3 class="work-card-title">sudoku <em>flow</em></h3>
+                    <p class="work-card-desc">Premium Notion-inspired Sudoku workspace. Pure HTML/CSS/JS. 9 game modes, smart hints, AI solver, daily challenges, full offline support.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/sudokuflow" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 28. roastmycode -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">RM</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">28</div>
+                    <h3 class="work-card-title">roast <em>my code</em></h3>
+                    <p class="work-card-desc">Paste your code &rarr; get brutally roasted by AI &rarr; refactored into production-ready code. Fun + functional code review tool.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/roastmycode" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 29. MemeDrop -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">MD</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">29</div>
+                    <h3 class="work-card-title">Meme <em>Drop</em></h3>
+                    <p class="work-card-desc">Dev Meme Generator with fresh/trending memes, custom text overlay, and one-click download. Built for developer humor and sharing.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/MemeDrop" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 30. browserbrain -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">BB</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">30</div>
+                    <h3 class="work-card-title">browser <em>brain</em></h3>
+                    <p class="work-card-desc">Powerful privacy-first support assistant. Complete privacy, no data tracking, intelligent responses for user support scenarios.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/browserbrain" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 31. AutoVault -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">AV</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">31</div>
+                    <h3 class="work-card-title">Auto <em>Vault</em></h3>
+                    <p class="work-card-desc">Smart automation and vault management system. Secure storage with automated workflows and intelligent organization.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/AutoVault" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 32. MAGE -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">MG</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">32</div>
+                    <h3 class="work-card-title">MAGE</h3>
+                    <p class="work-card-desc">Magic and illusion-themed interactive project. Creative exploration of visual effects and interactive storytelling.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/MAGE" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 33. VANTA -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">V</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">33</div>
+                    <h3 class="work-card-title">VANTA</h3>
+                    <p class="work-card-desc">Sleek dark-themed UI with smooth animations and modern design. Aesthetic-focused component library and design system exploration.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/VANTA" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                        <a href="https://vanta-exe.vercel.app" class="btn-small btn-small-outline" target="_blank">Live &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 34. PERSONA- -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">P</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">34</div>
+                    <h3 class="work-card-title">PERSONA <em>-</em></h3>
+                    <p class="work-card-desc">Mental health caretaker AI with mood tracking and wellness features. Privacy-first mental wellness companion application.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/PERSONA-" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                        <a href="https://askpersona.vercel.app" class="btn-small btn-small-outline" target="_blank">Live &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 35. Attendance Hub -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">AH</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">35</div>
+                    <h3 class="work-card-title">Attendance <em>Hub</em></h3>
+                    <p class="work-card-desc">Smart attendance tracking with facial recognition and QR codes. Modern attendance management system for institutions.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Attendance-Hub" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                        <a href="https://attendencehub.vercel.app/login" class="btn-small btn-small-outline" target="_blank">Live &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 36. Ethos Wear -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">EW</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">36</div>
+                    <h3 class="work-card-title">Ethos <em>Wear</em></h3>
+                    <p class="work-card-desc">Ethical fashion e-commerce platform. Sustainable clothing marketplace with modern shopping experience and eco-conscious focus.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Ethos-Wear" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                        <a href="https://ethos-wear.vercel.app" class="btn-small btn-small-outline" target="_blank">Live &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 37. vanta-v5- -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">V5</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">37</div>
+                    <h3 class="work-card-title">vanta <em>v5</em></h3>
+                    <p class="work-card-desc">VANTA version 5 iteration with enhanced design system, improved animations, and refined user interface components.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/vanta-v5-" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 38. PORTFOLIO -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">PF</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">38</div>
+                    <h3 class="work-card-title">PORT <em>FOLIO</em></h3>
+                    <p class="work-card-desc">Interactive 3D Book Portfolio. Vanilla HTML/CSS/JS with 3D page-flip book experience, chapters for bio, projects, skills, experience, certificates.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/PORTFOLIO" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 39. Cheater -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">CH</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">39</div>
+                    <h3 class="work-card-title">Cheater</h3>
+                    <p class="work-card-desc">AI handwriting-style notes creator. Upload data, generate handwriting-style notes, print assignments. Educational productivity tool.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Cheater" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 40. Crowd Detection -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">CD</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">40</div>
+                    <h3 class="work-card-title">Crowd <em>Detection</em></h3>
+                    <p class="work-card-desc">Real-time crowd density analysis using computer vision. Safety monitoring system for public spaces and events.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Crowd-Detection" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 41. Exam Corrector -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">EC</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">41</div>
+                    <h3 class="work-card-title">Exam <em>Corrector</em></h3>
+                    <p class="work-card-desc">Automated exam correction via OCR and LLM evaluation. Intelligent grading system for educational institutions.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Exam-Corrector" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 42. Meeting Manager -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">MM</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">42</div>
+                    <h3 class="work-card-title">Meeting <em>Manager</em></h3>
+                    <p class="work-card-desc">Smart scheduler with AI-generated summaries and action tracking. Automated meeting notes and task extraction.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Meeting-Manager" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 43. TripPlanner -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">TP</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">43</div>
+                    <h3 class="work-card-title">Trip <em>Planner</em></h3>
+                    <p class="work-card-desc">AI travel itinerary builder from personal preferences. Smart trip planning with recommendations and budget optimization.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/TripPlanner" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 44. FoodieXZ -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">FX</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">44</div>
+                    <h3 class="work-card-title">Foodie <em>XZ</em></h3>
+                    <p class="work-card-desc">Swiggy-like food ordering app with full restaurant and cart system. Complete food delivery platform with real-time tracking.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/FoodieXZ" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 45. Nyaya Vaani -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">NV</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">45</div>
+                    <h3 class="work-card-title">Nyaya <em>Vaani</em></h3>
+                    <p class="work-card-desc">Voice-based AI legal aid for underserved users. Accessible legal assistance through natural language voice interactions.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/Nyaya-Vaani" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 46. WiFi Presence Detection -->
+            <div class="work-card fade-in">
+                <div class="work-card-image"><div class="work-card-icon">WP</div></div>
+                <div class="work-card-body">
+                    <div class="work-card-number">46</div>
+                    <h3 class="work-card-title">WiFi <em>Presence</em></h3>
+                    <p class="work-card-desc">Human presence detection via WiFi signal patterns &mdash; no cameras required. Privacy-preserving occupancy sensing technology.</p>
+                    <div class="work-card-actions">
+                        <a href="https://github.com/vincenzo-afk/WiFi-Presence-Detection" class="btn-small btn-small-primary" target="_blank">GitHub &nearr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <div class="contact-left fade-in">
+            <div class="contact-globe"></div>
+        </div>
+        <div class="fade-in stagger-1">
+            <h2 class="contact-title">Get in touch</h2>
+            <a href="mailto:itsmebk2007@gmail.com" class="contact-email">itsmebk2007@gmail.com</a>
+            <div class="contact-social">
+                <a href="https://github.com/vincenzo-afk" target="_blank" title="GitHub">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/bharani-kumar-a13673327" target="_blank" title="LinkedIn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="https://x.com/abnormal84662" target="_blank" title="X/Twitter">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/vinzo.verse" target="_blank" title="Instagram">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                </a>
+                <a href="https://dev.to/bharani_2007" target="_blank" title="Dev.to">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.42 10.05c-.18-.16-.46-.23-.84-.23H6v1.9h.57c.46 0 .8-.11 1.03-.34.23-.22.34-.53.34-.92 0-.32-.09-.57-.27-.73l-.25-.18zm.78-.67c.32-.35.48-.82.48-1.4 0-.55-.15-.97-.45-1.27-.3-.3-.74-.45-1.32-.45H4v7.5h2.52c.59 0 1.06-.16 1.42-.47.36-.32.54-.76.54-1.33 0-.56-.16-1-.48-1.32l-.8-.26zM6 7.85h.52c.36 0 .63.08.8.25.17.17.26.4.26.7 0 .3-.09.53-.26.69-.17.16-.44.24-.8.24H6V7.85zm1.28 4.72c-.19.17-.47.26-.84.26H6v-2.14h1.44c.37 0 .65.09.84.26.19.17.28.42.28.75 0 .34-.09.6-.28.77v.1zM15.36 6h-1.8l-2.1 4.5V6h-1.5v7.5h1.5v-2.1l.6-1.2 1.5 3.3h1.8l-2.4-4.8 2.4-2.7zM20.16 6h-3.9v1.5h1.2v6h1.5v-6h1.2V6z"/></svg>
+                </a>
+                <a href="https://huggingface.co/bk2007" target="_blank" title="Hugging Face">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </a>
+            </div>
+            <form class="contact-form" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email address</label>
+                        <input type="email" placeholder="Your email address" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea placeholder="Write something..." required></textarea>
+                </div>
+                <button type="submit" class="form-submit">Send Message</button>
+            </form>
+        </div>
+    </section>
 
-    <script src="js/physics.js"></script>
-    <script src="js/book.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div>
+                <a href="mailto:itsmebk2007@gmail.com" class="footer-email">itsmebk2007@gmail.com</a>
+                <ul class="footer-nav" style="margin-top:24px">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#work">Projects</a></li>
+                </ul>
+            </div>
+            <div class="footer-cta">
+                <p>Let's build something<br>Open for freelance opportunities and collaborations.</p>
+                <a href="#contact" class="btn-outline" style="margin-top:16px">Get in touch</a>
+            </div>
+        </div>
+        <div class="footer-brand-container">
+            <div class="footer-glow"></div>
+            <div class="footer-brand">BHARANI</div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copyright">&copy; 2026 Bharani Kumar S. All Rights Reserved.</span>
+            <div class="footer-links">
+                <a href="https://www.instagram.com/vinzo.verse" target="_blank">Instagram</a>
+                <a href="https://www.linkedin.com/in/bharani-kumar-a13673327" target="_blank">LinkedIn</a>
+                <a href="https://github.com/vincenzo-afk" target="_blank">GitHub</a>
+                <a href="https://x.com/abnormal84662" target="_blank">X</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const navToggle = document.getElementById('navToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        function closeMenu() {
+            navToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Navbar Scroll Effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // Service Accordion
+        function toggleService(item) {
+            const allItems = document.querySelectorAll('.service-item');
+            allItems.forEach(i => { if (i !== item) i.classList.remove('active'); });
+            item.classList.toggle('active');
+        }
+
+        // Scroll Animations
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, observerOptions);
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Form Submit
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert('Thanks for reaching out! I will get back to you soon.');
+            e.target.reset();
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Parallax for hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroText = document.querySelector('.hero-bg-text');
+            if (heroText) heroText.style.transform = `translateY(${scrolled * 0.3}px)`;
+        });
+    </script>
 </body>
 </html>
