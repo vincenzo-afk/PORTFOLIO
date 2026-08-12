@@ -1,0 +1,10 @@
+{
+  "buildCommand": "echo static",
+  "outputDirectory": ".",
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/assets/(.*)", "headers": { "cache-control": "public, max-age=31536000, immutable" } },
+    { "src": "/sitemap.xml", "headers": { "cache-control": "public, max-age=3600" } },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
