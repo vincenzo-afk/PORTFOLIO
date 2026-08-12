@@ -3,7 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bharani Kumar S — Portfolio</title>
+    <title>Bharani Kumar S — AI Full-Stack Developer Portfolio | 70+ Projects</title>
+    <meta name="description" content="Portfolio of Bharani Kumar S — AI full-stack software developer with 70+ AI projects and 55+ public repositories. Specializing in React, FastAPI, Node.js, LLMs, LangChain, and MCP.">
+    <meta name="keywords" content="Bharani Kumar S, software developer, AI developer, full-stack developer, portfolio, React, FastAPI, Node.js, LangChain, LLM, AI projects, vincenzo-afk, Kingston Engineering College">
+    <meta name="author" content="Bharani Kumar S">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="canonical" href="https://vincenzo-afk.github.io/PORTFOLIO/">
+    <link rel="icon" href="assets/favicon-32.png" type="image/png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Bharani Kumar S — Portfolio">
+    <meta property="og:title" content="Bharani Kumar S — AI Full-Stack Developer Portfolio">
+    <meta property="og:description" content="AI full-stack developer with 70+ AI projects and 55+ public repositories. React, FastAPI, Node.js, LLMs, LangChain &amp; MCP.">
+    <meta property="og:image" content="https://vincenzo-afk.github.io/PORTFOLIO/assets/og-portfolio.png">
+    <meta property="og:url" content="https://vincenzo-afk.github.io/PORTFOLIO/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bharani Kumar S — AI Full-Stack Developer Portfolio">
+    <meta name="twitter:description" content="AI full-stack developer with 70+ AI projects and 55+ public repositories.">
+    <meta name="twitter:image" content="https://vincenzo-afk.github.io/PORTFOLIO/assets/og-portfolio.png">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Bharani Kumar S",
+      "url": "https://vincenzo-afk.github.io/PORTFOLIO/",
+      "image": "https://vincenzo-afk.github.io/PORTFOLIO/assets/bk-avatar.png",
+      "jobTitle": "Software Developer — AI Full-Stack",
+      "email": "itsmebk2007@gmail.com",
+      "sameAs": [
+        "https://github.com/vincenzo-afk",
+        "https://www.linkedin.com/in/bharani-kumar-a13673327",
+        "https://x.com/abnormal84662",
+        "https://www.instagram.com/vinzo.verse",
+        "https://dev.to/bharani_2007",
+        "https://huggingface.co/bk2007"
+      ],
+      "knowsAbout": ["React", "FastAPI", "Node.js", "LLMs", "LangChain", "MCP", "Artificial Intelligence"],
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "Kingston Engineering College, Vellore"
+      }
+    }
+    </script>
+    <link rel="sitemap" type="application/xml" href="sitemap.xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -399,13 +441,34 @@
             .service-header { padding: 18px 20px; font-size: 14px; }
             .work-card-body { padding: 20px; }
         }
+        /* BRAND LOGO & REPO BUTTON */
+        .nav-brand { display: flex; align-items: center; gap: 10px; }
+        .nav-logo { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
+        .nav-right { display: flex; align-items: center; gap: 24px; }
+        .nav-repo-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 18px; font-size: 12px; font-weight: 600;
+            letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none;
+            color: var(--text); background: transparent;
+            border: 1px solid var(--accent); border-radius: 100px;
+            transition: all 0.3s ease;
+        }
+        .nav-repo-btn:hover { background: var(--accent); color: var(--bg); }
+        .nav-repo-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        @media (max-width: 768px) { .nav-repo-btn { display: none; } }
+        .form-status { font-size: 13px; margin-top: 12px; min-height: 20px; }
+        .form-status.success { color: var(--accent); }
+        .form-status.error { color: #ff5555; }
     </style>
 <base target="_blank">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="nav" id="nav">
-        <a href="#" class="nav-brand">BHARANI</a>
+        <a href="#home" class="nav-brand">
+            <img class="nav-logo" src="assets/logo-40.png" alt="Bharani Kumar S — Portfolio logo" width="40" height="40">
+            BHARANI
+        </a>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -413,8 +476,14 @@
             <li><a href="#work">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
-        <div class="nav-toggle" id="navToggle">
-            <span></span><span></span><span></span>
+        <div class="nav-right">
+            <a class="nav-repo-btn" href="https://github.com/vincenzo-afk/PORTFOLIO" target="_blank" rel="noopener" title="View this portfolio's source code on GitHub">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                Source
+            </a>
+            <div class="nav-toggle" id="navToggle">
+                <span></span><span></span><span></span>
+            </div>
         </div>
     </nav>
 
@@ -1151,22 +1220,23 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                 </a>
             </div>
-            <form class="contact-form" onsubmit="handleSubmit(event)">
+            <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Your Name</label>
-                        <input type="text" placeholder="Your full name" required>
+                        <label for="contactName">Your Name</label>
+                        <input type="text" id="contactName" name="name" placeholder="Your full name" required>
                     </div>
                     <div class="form-group">
-                        <label>Email address</label>
-                        <input type="email" placeholder="Your email address" required>
+                        <label for="contactEmail">Email address</label>
+                        <input type="email" id="contactEmail" name="email" placeholder="Your email address" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Message</label>
-                    <textarea placeholder="Write something..." required></textarea>
+                    <label for="contactMessage">Message</label>
+                    <textarea id="contactMessage" name="message" placeholder="Write something..." required></textarea>
                 </div>
-                <button type="submit" class="form-submit">Send Message</button>
+                <button type="submit" class="form-submit" id="submitBtn">Send Message</button>
+                <div class="form-status" id="formStatus" aria-live="polite"></div>
             </form>
         </div>
     </section>
@@ -1239,11 +1309,39 @@
         }, observerOptions);
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-        // Form Submit
-        function handleSubmit(e) {
+        // Form Submit (Resend)
+        async function handleSubmit(e) {
             e.preventDefault();
-            alert('Thanks for reaching out! I will get back to you soon.');
-            e.target.reset();
+            const form = e.target;
+            const btn = form.querySelector('#submitBtn');
+            const status = form.querySelector('#formStatus');
+            const payload = {
+                name: form.querySelector('#contactName').value.trim(),
+                email: form.querySelector('#contactEmail').value.trim(),
+                message: form.querySelector('#contactMessage').value.trim()
+            };
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            status.className = 'form-status';
+            status.textContent = '';
+            try {
+                const res = await fetch('/api/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+                status.className = 'form-status success';
+                status.textContent = 'Message sent — I will get back to you soon!';
+                form.reset();
+            } catch (err) {
+                status.className = 'form-status error';
+                status.textContent = err.message || 'Something went wrong. Please email me directly.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send Message';
+            }
         }
 
         // Smooth scroll for anchor links
