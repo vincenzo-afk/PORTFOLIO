@@ -459,54 +459,36 @@
         .form-status { font-size: 13px; margin-top: 12px; min-height: 20px; }
         .form-status.success { color: var(--accent); }
         .form-status.error { color: #ff5555; }
-    /* ===== Glowing cursor trail ===== */
+    /* ===== Cursor glow spotlight ===== */
     #cursor-glow {
         position: fixed;
         top: 0;
         left: 0;
-        width: 26px;
-        height: 26px;
-        margin: -13px 0 0 -13px;
+        width: 220px;
+        height: 220px;
+        margin: -110px 0 0 -110px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(200, 255, 0, 0.55) 0%, rgba(200, 255, 0, 0.18) 45%, transparent 70%);
-        box-shadow: 0 0 18px rgba(200, 255, 0, 0.5), 0 0 40px rgba(200, 255, 0, 0.25);
+        background: radial-gradient(circle, rgba(200, 255, 0, 0.14) 0%, rgba(200, 255, 0, 0.06) 40%, transparent 68%);
         pointer-events: none;
-        z-index: 10000;
+        z-index: 9998;
         transform: translate3d(0, 0, 0);
-        transition: opacity 0.4s ease;
+        transition: opacity 0.5s ease, width 0.4s ease, height 0.4s ease, margin 0.4s ease, background 0.4s ease;
         will-change: transform;
+        opacity: 0;
+    }
+
+    #cursor-glow.visible { opacity: 1; }
+
+    #cursor-glow.hovering {
+        width: 280px;
+        height: 280px;
+        margin: -140px 0 0 -140px;
+        background: radial-gradient(circle, rgba(200, 255, 0, 0.24) 0%, rgba(200, 255, 0, 0.1) 42%, transparent 70%);
     }
 
     @media (hover: none), (prefers-reduced-motion: reduce) {
         #cursor-glow { display: none; }
     }
-
-    .cursor-dot {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 10px;
-        height: 10px;
-        margin: -5px 0 0 -5px;
-        border-radius: 50%;
-        background: var(--accent);
-        box-shadow: 0 0 10px var(--accent), 0 0 24px rgba(200, 255, 0, 0.6);
-        pointer-events: none;
-        z-index: 10001;
-        transform: translate3d(0, 0, 0);
-        transition: opacity 0.4s ease, width 0.3s ease, height 0.3s ease, margin 0.3s ease;
-        will-change: transform;
-    }
-
-    .cursor-dot.lift, #cursor-glow.lift {
-        width: 42px;
-        height: 42px;
-        margin-left: -21px;
-        margin-top: -21px;
-        opacity: 0.85;
-    }
-
-    #cursor-glow.lift { margin: -21px 0 0 -21px; }
     </style>
 <base target="_blank">
 </head>
@@ -1320,72 +1302,44 @@
             </div>
         </div>
         </footer>
-    <!-- Glowing cursor elements -->
+    <!-- Cursor glow spotlight -->
     <div id="cursor-glow" aria-hidden="true"></div>
-    <div class="cursor-dot" aria-hidden="true"></div>
     <script>
-        // ===== Glowing cursor trail =====
+        // ===== Cursor glow spotlight =====
         (() => {
             const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
             const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (isTouchDevice || prefersReduced) return;
 
             const glow = document.getElementById('cursor-glow');
-            const dot = document.querySelector('.cursor-dot');
-            if (!glow || !dot) return;
+            if (!glow) return;
 
             let mouseX = window.innerWidth / 2;
             let mouseY = window.innerHeight / 2;
-            let glowX = mouseX;
-            let glowY = mouseY;
             let rafId = null;
 
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
-                dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-                if (!rafId) rafId = requestAnimationFrame(smoothGlow);
+                if (!glow.classList.contains('visible')) glow.classList.add('visible');
+                if (!rafId) rafId = requestAnimationFrame(updateGlow);
             }, { passive: true });
 
-            // The outer glow lags slightly behind the dot for a trailing feel
-            function smoothGlow() {
+            function updateGlow() {
                 rafId = null;
-                glowX += (mouseX - glowX) * 0.18;
-                glowY += (mouseY - glowY) * 0.18;
-                glow.style.transform = `translate3d(${glowX}px, ${glowY}px, 0)`;
-                if (Math.abs(mouseX - glowX) > 0.5 || Math.abs(mouseY - glowY) > 0.5) {
-                    rafId = requestAnimationFrame(smoothGlow);
-                }
+                glow.style.transform = `translate3d(${Math.round(mouseX)}px, ${Math.round(mouseY)}px, 0)`;
             }
 
-            // Scale up when hovering interactive elements
-            const liftTargets = 'a, button, input, textarea, select, [role="button"]';
+            const interactive = 'a, button, input, textarea, select, [role="button"]';
             document.addEventListener('mouseover', (e) => {
-                if (e.target.closest(liftTargets)) {
-                    glow.classList.add('lift');
-                    dot.classList.add('lift');
-                }
+                if (e.target.closest(interactive)) glow.classList.add('hovering');
             });
             document.addEventListener('mouseout', (e) => {
-                if (e.target.closest(liftTargets)) {
-                    glow.classList.remove('lift');
-                    dot.classList.remove('lift');
-                }
+                if (e.target.closest(interactive)) glow.classList.remove('hovering');
             });
 
-            // Hide while hovering outside the viewport (e.g., scrollbars)
-            document.addEventListener('mouseleave', () => {
-                glow.style.opacity = '0';
-                dot.style.opacity = '0';
-            });
-            document.addEventListener('mouseenter', () => {
-                glow.style.opacity = '';
-                dot.style.opacity = '';
-            });
-
-            // Initial placement so it doesn't flash from top-left
-            glow.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-            dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+            document.addEventListener('mouseleave', () => glow.classList.remove('visible'));
+            document.addEventListener('mouseenter', () => glow.classList.add('visible'));
         })();
 
         // Mobile Menu Toggle
