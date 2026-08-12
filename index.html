@@ -459,6 +459,54 @@
         .form-status { font-size: 13px; margin-top: 12px; min-height: 20px; }
         .form-status.success { color: var(--accent); }
         .form-status.error { color: #ff5555; }
+    /* ===== Glowing cursor trail ===== */
+    #cursor-glow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 26px;
+        height: 26px;
+        margin: -13px 0 0 -13px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(200, 255, 0, 0.55) 0%, rgba(200, 255, 0, 0.18) 45%, transparent 70%);
+        box-shadow: 0 0 18px rgba(200, 255, 0, 0.5), 0 0 40px rgba(200, 255, 0, 0.25);
+        pointer-events: none;
+        z-index: 10000;
+        transform: translate3d(0, 0, 0);
+        transition: opacity 0.4s ease;
+        will-change: transform;
+    }
+
+    @media (hover: none), (prefers-reduced-motion: reduce) {
+        #cursor-glow { display: none; }
+    }
+
+    .cursor-dot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 10px;
+        height: 10px;
+        margin: -5px 0 0 -5px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 10px var(--accent), 0 0 24px rgba(200, 255, 0, 0.6);
+        pointer-events: none;
+        z-index: 10001;
+        transform: translate3d(0, 0, 0);
+        transition: opacity 0.4s ease, width 0.3s ease, height 0.3s ease, margin 0.3s ease;
+        will-change: transform;
+    }
+
+    .cursor-dot.lift, #cursor-glow.lift {
+        width: 42px;
+        height: 42px;
+        margin-left: -21px;
+        margin-top: -21px;
+        opacity: 0.85;
+    }
+
+    #cursor-glow.lift { margin: -21px 0 0 -21px; }
     </style>
 <base target="_blank">
 </head>
@@ -1271,9 +1319,75 @@
                 <a href="https://x.com/abnormal84662" target="_blank">X</a>
             </div>
         </div>
-    </footer>
-
+        </footer>
+    <!-- Glowing cursor elements -->
+    <div id="cursor-glow" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
     <script>
+        // ===== Glowing cursor trail =====
+        (() => {
+            const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (isTouchDevice || prefersReduced) return;
+
+            const glow = document.getElementById('cursor-glow');
+            const dot = document.querySelector('.cursor-dot');
+            if (!glow || !dot) return;
+
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let glowX = mouseX;
+            let glowY = mouseY;
+            let rafId = null;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+                if (!rafId) rafId = requestAnimationFrame(smoothGlow);
+            }, { passive: true });
+
+            // The outer glow lags slightly behind the dot for a trailing feel
+            function smoothGlow() {
+                rafId = null;
+                glowX += (mouseX - glowX) * 0.18;
+                glowY += (mouseY - glowY) * 0.18;
+                glow.style.transform = `translate3d(${glowX}px, ${glowY}px, 0)`;
+                if (Math.abs(mouseX - glowX) > 0.5 || Math.abs(mouseY - glowY) > 0.5) {
+                    rafId = requestAnimationFrame(smoothGlow);
+                }
+            }
+
+            // Scale up when hovering interactive elements
+            const liftTargets = 'a, button, input, textarea, select, [role="button"]';
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest(liftTargets)) {
+                    glow.classList.add('lift');
+                    dot.classList.add('lift');
+                }
+            });
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest(liftTargets)) {
+                    glow.classList.remove('lift');
+                    dot.classList.remove('lift');
+                }
+            });
+
+            // Hide while hovering outside the viewport (e.g., scrollbars)
+            document.addEventListener('mouseleave', () => {
+                glow.style.opacity = '0';
+                dot.style.opacity = '0';
+            });
+            document.addEventListener('mouseenter', () => {
+                glow.style.opacity = '';
+                dot.style.opacity = '';
+            });
+
+            // Initial placement so it doesn't flash from top-left
+            glow.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+            dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+        })();
+
         // Mobile Menu Toggle
         const navToggle = document.getElementById('navToggle');
         const mobileMenu = document.getElementById('mobileMenu');
