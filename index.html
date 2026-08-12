@@ -500,7 +500,7 @@
         <div class="hero-bg-text">PORTFOLIO</div>
         <div class="hero-content">
             <div class="hero-image">
-                <img src="https://github.com/vincenzo-afk.png" alt="Bharani Kumar S" onerror="this.src='data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22380%22&gt;&lt;rect fill=%22%23111%22 width=%22280%22 height=%22380%22/&gt;&lt;text fill=%22%23555%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 font-size=%2240%22 font-family=%22sans-serif%22&gt;BK&lt;/text&gt;&lt;/svg&gt;'">
+                <img src="assets/portrait-hero.png" width="280" height="380" alt="Bharani Kumar S" fetchpriority="high">
             </div>
             <h1 class="hero-title">PORTFOLIO</h1>
             <p class="hero-subtitle"><span>Software</span> <em>Developer</em></p>
@@ -514,7 +514,7 @@
     <!-- Intro -->
     <section class="intro" id="about">
         <div class="intro-image fade-in">
-            <img src="https://github.com/vincenzo-afk.png" alt="Bharani Kumar S" onerror="this.src='data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22450%22 height=%22600%22&gt;&lt;rect fill=%22%23111%22 width=%22450%22 height=%22600%22/&gt;&lt;text fill=%22%23555%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 font-size=%2260%22 font-family=%22sans-serif%22&gt;BK&lt;/text&gt;&lt;/svg&gt;'">
+            <img src="assets/portrait-intro.png" width="450" height="600" alt="Bharani Kumar S" loading="lazy">
         </div>
         <div class="fade-in stagger-1">
             <h2 class="intro-label">Intro</h2>
@@ -1288,12 +1288,8 @@
             document.body.style.overflow = '';
         }
 
-        // Navbar Scroll Effect
+        // Navbar Scroll Effect (batched into the single rAF scroll loop below)
         const nav = document.getElementById('nav');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
-        });
 
         // Service Accordion
         function toggleService(item) {
@@ -1353,12 +1349,20 @@
             });
         });
 
-        // Parallax for hero
+        // Parallax for hero (batched into the single rAF scroll loop below)
+        const heroTextEl = document.querySelector('.hero-bg-text');
+        // Single rAF loop for all scroll-driven updates to avoid layout jank
+        let ticking = false;
+        function onScrollTick() {
+            const y = window.pageYOffset;
+            if (y > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+            if (heroTextEl) heroTextEl.style.transform = `translateY(${y * 0.3}px)`;
+            ticking = false;
+        }
         window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const heroText = document.querySelector('.hero-bg-text');
-            if (heroText) heroText.style.transform = `translateY(${scrolled * 0.3}px)`;
-        });
+            if (!ticking) { ticking = true; requestAnimationFrame(onScrollTick); }
+        }, { passive: true });
     </script>
 </body>
 </html>
